@@ -1,5 +1,6 @@
 import os
 import glob
+import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
@@ -7,11 +8,10 @@ class SegmentationDataset(tf.keras.utils.Sequence):
     """
     Custom dataset class for image segmentation.
 
-    This class inherits from tf.keras.utils.Sequence and is designed to be used
-    with the tf.keras model training process.
+    ...
 
     Parameters:
-    - data_folder (str): Path to the dataset folder containing subfolders for images and masks.
+    - data_folder (str): Path to the dataset folder containing 'Training', 'Validation', and 'Test' subfolders.
     - batch_size (int): Batch size for training.
     - image_size (tuple): Target size for resizing input images.
     """
@@ -20,9 +20,13 @@ class SegmentationDataset(tf.keras.utils.Sequence):
         self.batch_size = batch_size
         self.image_size = image_size
 
-        # List of image and mask file paths
-        self.image_paths = glob.glob(os.path.join(data_folder, "images", "*.jpg"))
-        self.mask_paths = glob.glob(os.path.join(data_folder, "masks", "*.png"))
+        # List of image and mask file paths for training
+        self.train_image_paths = glob.glob(os.path.join(data_folder, 'Training', 'train', '*.tif'))
+        self.train_mask_paths = glob.glob(os.path.join(data_folder, 'Training', 'train_labels', '*.tif'))
+
+        # List of image and mask file paths for validation
+        self.val_image_paths = glob.glob(os.path.join(data_folder, 'Validation', 'val', '*.tif'))
+        self.val_mask_paths = glob.glob(os.path.join(data_folder, 'Validation', 'val_labels', '*.tif'))
 
         # Image data generator for augmentation (customize as needed)
         self.image_data_generator = ImageDataGenerator(
@@ -37,14 +41,15 @@ class SegmentationDataset(tf.keras.utils.Sequence):
         )
 
     def __len__(self):
-        return len(self.image_paths) // self.batch_size
+        # Use either the length of the training or validation set based on the context
+        return len(self.train_image_paths) // self.batch_size
 
     def __getitem__(self, idx):
         start_idx = idx * self.batch_size
         end_idx = (idx + 1) * self.batch_size
 
-        batch_image_paths = self.image_paths[start_idx:end_idx]
-        batch_mask_paths = self.mask_paths[start_idx:end_idx]
+        batch_image_paths = self.train_image_paths[start_idx:end_idx]
+        batch_mask_paths = self.train_mask_paths[start_idx:end_idx]
 
         batch_images = [tf.keras.preprocessing.image.load_img(path, target_size=self.image_size) for path in batch_image_paths]
         batch_masks = [tf.keras.preprocessing.image.load_img(path, target_size=self.image_size, color_mode="grayscale") for path in batch_mask_paths]
@@ -52,8 +57,5 @@ class SegmentationDataset(tf.keras.utils.Sequence):
         # Convert images and masks to arrays
         batch_images = np.array([tf.keras.preprocessing.image.img_to_array(img) for img in batch_images])
         batch_masks = np.array([tf.keras.preprocessing.image.img_to_array(mask) for mask in batch_masks])
-
-        # Augment images and masks (if needed)
-        # ...
 
         return batch_images, batch_masks

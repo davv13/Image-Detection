@@ -4,6 +4,8 @@ import tensorflow as tf
 from model import create_unet_model
 from dataset import SegmentationDataset
 
+tf.config.run_functions_eagerly(True)
+
 def train(dataset_path, output_model_path, epochs=10, batch_size=32):
     """
     Train a segmentation model.

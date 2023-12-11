@@ -1,4 +1,5 @@
 import os
+import imageio
 import argparse
 import numpy as np
 import tensorflow as tf
@@ -33,10 +34,9 @@ def preprocess_input(image_path):
     Returns:
     - numpy.ndarray: The preprocessed image as a NumPy array.
     """
-    img = image.load_img(image_path, target_size=(224, 224)) 
-    img_array = image.img_to_array(img)
+    img = imageio.imread(image_path)
+    img_array = img.astype(np.float32) / 255.0  # Normalize pixel values to [0, 1]
     img_array = np.expand_dims(img_array, axis=0)
-    img_array /= 255.0 
     return img_array
 
 
