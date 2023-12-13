@@ -6,8 +6,8 @@ import tensorflow as tf
 
 def main(data_dir, model_dir, epochs, batch_size, learning_rate):
     # Load the dataset
-    train_dataset = dataset.load_data(data_dir, batch_size=batch_size, image_size=(256, 256), mode='training')
-    val_dataset = dataset.load_data(data_dir, batch_size=batch_size, image_size=(256, 256), mode='validation')
+    train_dataset = dataset.load_data(data_dir, batch_size=batch_size, image_size=(256, 256), mode='Train')
+    val_dataset = dataset.load_data(data_dir, batch_size=batch_size, image_size=(256, 256), mode='Validation')
 
     # Initialize the model
     road_segmentation_model = model.unet_model()
