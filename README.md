@@ -33,7 +33,7 @@ The project is organized into several directories and key files:
    Data/\
     ├── Train/\
     ├── Validation/\
-    └── Test/\
+    └── Test/
 
 2. **Configure the Training Script**
 Open `train.py` and set your dataset path and other desired hyperparameters.
