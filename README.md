@@ -31,9 +31,9 @@ The project is organized into several directories and key files:
 1. **Prepare the Dataset**
    Place your dataset in the 'Data/' folder with the following structure:
    Data/
-    ├── Train/\n
-    ├── Validation/\n
-    └── Test/\n
+    ├── Train/\
+    ├── Validation/\
+    └── Test/\
 
 2. **Configure the Training Script**
 Open `train.py` and set your dataset path and other desired hyperparameters.
