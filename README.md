@@ -29,7 +29,7 @@ The project is organized into several directories and key files:
 ### Training the Model
 
 1. **Prepare the Dataset**
-   Place your dataset in the 'Data/' folder with the following structure:
+   Place your dataset in the 'Data/' folder with the following structure:\
    Data/\
     ├── Train/\
     ├── Validation/\
