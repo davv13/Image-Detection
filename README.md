@@ -31,9 +31,9 @@ The project is organized into several directories and key files:
 1. **Prepare the Dataset**
    Place your dataset in the 'Data/' folder with the following structure:
    Data/
-    ├── Train/
-    ├── Validation/
-    └── Test/
+    ├── Train/\n
+    ├── Validation/\n
+    └── Test/\n
 
 2. **Configure the Training Script**
 Open `train.py` and set your dataset path and other desired hyperparameters.
@@ -47,7 +47,7 @@ Execute the training script:
 ### Running Inference
 
 1. **Prepare the Model**
-Ensure your trained model is saved in `.h5` format.
+Ensure your trained model is saved in `.keras` format.
 
 2. **Configure Inference Script**
 In `inference.py`, set the paths for the model, input image, and output destination.
