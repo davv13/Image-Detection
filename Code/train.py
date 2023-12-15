@@ -1,37 +1,33 @@
 import os
-import model
-import dataset
-import argparse
+import datetime
 import tensorflow as tf
+from model import unet_model
+from dataset import RoadSegmentationDataset
+from tensorflow.keras.callbacks import TensorBoard
 
-def main(data_dir, model_dir, epochs, batch_size, learning_rate):
-    # Load the dataset
-    train_dataset = dataset.load_data(data_dir, batch_size=batch_size, image_size=(256, 256), mode='Train')
-    val_dataset = dataset.load_data(data_dir, batch_size=batch_size, image_size=(256, 256), mode='Validation')
+def train(dataset_path, epochs, batch_size, learning_rate):
+    train_dataset = RoadSegmentationDataset(os.path.join(dataset_path, 'Train/images'), 
+                                            os.path.join(dataset_path, 'Train/labels'), 
+                                            batch_size, (256, 256))
+    val_dataset = RoadSegmentationDataset(os.path.join(dataset_path, 'Validation/images'), 
+                                          os.path.join(dataset_path, 'Validation/labels'), 
+                                          batch_size, (256, 256))
+    
 
-    # Initialize the model
-    road_segmentation_model = model.unet_model()
-    road_segmentation_model = model.compile_model(road_segmentation_model, lr=learning_rate)
+    model = unet_model()
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate),
+                  loss='binary_crossentropy',
+                  metrics=['accuracy'])
 
-    # Setup checkpoint callback
-    checkpoint_path = os.path.join(model_dir, "cp-{epoch:04d}.ckpt")
-    checkpoint_dir = os.path.dirname(checkpoint_path)
-    cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path, save_weights_only=True, verbose=1)
+    logdir = os.path.join("logs", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(logdir, histogram_freq=1, update_freq='batch')
 
-    # Train the model
-    history = road_segmentation_model.fit(train_dataset, epochs=epochs, validation_data=val_dataset, callbacks=[cp_callback])
+    model.fit(train_dataset, 
+              epochs=epochs, 
+              validation_data=val_dataset, 
+              callbacks=[tensorboard_callback])
+    
+    model.save('unet_road_segmentation.keras')
 
-    # Save the final model
-    final_model_path = os.path.join(model_dir, 'final_model')
-    road_segmentation_model.save(final_model_path)
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Train a road segmentation model.')
-    parser.add_argument('--data_dir', type=str, required=True, help='Directory for the dataset')
-    parser.add_argument('--model_dir', type=str, required=True, help='Directory to save the models')
-    parser.add_argument('--epochs', type=int, default=10, help='Number of epochs for training')
-    parser.add_argument('--batch_size', type=int, default=32, help='Batch size for training')
-    parser.add_argument('--lr', type=float, default=0.001, help='Learning rate')
-
-    args = parser.parse_args()
-    main(args.data_dir, args.model_dir, args.epochs, args.batch_size, args.lr)
+if __name__ == '__main__':
+    train('Image-Segmentation/Data', epochs=1, batch_size=12, learning_rate=0.001)

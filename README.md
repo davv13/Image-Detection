@@ -1,33 +1,65 @@
-# Image Segmentation Project
+# Road Segmentation Using U-Net and TensorFlow
 
-This project involves the creation of a segmentation model for road detection in satellite images using TensorFlow and Keras.
+This project implements a U-Net model for road segmentation in images, utilizing TensorFlow. The code is structured into several key scripts for training the model, performing inference, handling the dataset, and defining the model architecture.
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+- Python 3.x
+- TensorFlow 2.x
+- OpenCV-Python
+- NumPy
 
 ## Project Structure
 
-The project is organized into the following files and folders:
+The project is organized into several directories and key files:
 
-- **Code Folder:**
-  - `inference.py`: Contains the model inference code for processing a single image.
-  - `dataset.py`: Includes code related to the dataset, such as the `SegmentationDataset` class, preprocessing, augmentation, and post-processing routines.
-  - `model.py`: Contains code related to the model, including the network architecture, layers, and loss functions.
-  - `train.py`: Contains the training code. It accepts a dataset path and hyperparameters as inputs and produces and saves at least one checkpoint as output.
+- **Code/**
+  - `inference.py`: Script for model inference on single images.
+  - `dataset.py`: Handles dataset loading and preprocessing.
+  - `model.py`: Defines the U-Net model architecture.
+  - `train.py`: Contains the training routine.
+- **Data/**
+  - Sub-folders for training, validation, and testing datasets.
+- **Results/**
+  - Directory for storing output images from inference.
 
-- **Data Folder:**
-  - `training`: Contains data used for training.
-  - `validation`: Contains data used for validation.
-  - `test`: For holding data used for testing.
+## Setup and Running Instructions
 
-- **Result Folder:**
-  - Contains the results of testing.
+### Training the Model
 
-## Getting Started
+1. **Prepare the Dataset**
+   Place your dataset in the 'Data/' folder with the following structure:
+   Data/
+    ├── Train/
+    ├── Validation/
+    └── Test/
 
-1. **Install Dependencies:**
-   ```bash
-    pip install -r requirements.txt
-2. **Training the Model:**
-   ```bash
-    python train.py --dataset_path Data --output_model_path model.h5 --epochs 10 --batch_size 32
-3. **Model Inference:**
-   ```bash
-   python inference.py --image_path Data/test/images/test_image.jpg --model_path model.h5 --output_folder Result
+2. **Configure the Training Script**
+Open `train.py` and set your dataset path and other desired hyperparameters.
+
+3. **Run the Training**
+Execute the training script:
+```python
+  python train.py
+```
+
+### Running Inference
+
+1. **Prepare the Model**
+Ensure your trained model is saved in `.h5` format.
+
+2. **Configure Inference Script**
+In `inference.py`, set the paths for the model, input image, and output destination.
+
+3. **Execute Inference**
+Run the script to process an image:
+
+```python
+  python inference.py
+```
+
+## Additional Notes
+
+- Ensure all script paths are correctly set according to your directory structure.
+- Modify `dataset.py` and `model.py` as needed to suit your specific project requirements.
