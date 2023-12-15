@@ -30,7 +30,7 @@ The project is organized into several directories and key files:
 
 1. **Prepare the Dataset**
    Place your dataset in the 'Data/' folder with the following structure:
-   Data/
+   Data/\
     ├── Train/\
     ├── Validation/\
     └── Test/\
